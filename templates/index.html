@@ -1,0 +1,149 @@
+<html lang="en">
+<head>
+    <title>Workantile Internet Connection Status</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+        table#main {
+            height:100%; width:100%;
+            position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+        }
+        #main td {
+            vertical-align: bottom;
+        }
+        .text {
+            font-size: 1.25em;
+            padding: 18px 24px;
+            text-align: right;
+            font-weight: bold;
+            color: white;
+        }
+        #error-display {
+            position: relative;
+            z-index: 1000;
+            width: 75%;
+            margin: 100px auto auto auto;
+            background-color: lightpink;
+            border: 2px dashed black;
+            font-size: 1.5em;
+            padding: 48px 64px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="error-display">aaaaaa</div>
+    <table id="main">
+        <tr style="height: 50%">
+            <td colspan="2" id="google-ping" style="background-color: gray; width: 33.33%;">
+                <div class="text">Google<br /><span class="detail">Loading...</span></div>
+            </td>
+            <td colspan="2" id="speedtest" style="background-color: gray; width: 33.33%;">
+                <div class="text">Speed (fast.com)<br /><span class="detail">Loading...</span></div>
+            </td>
+            <td colspan="2" id="cloudflare-ping" style="background-color: gray; width: 33.33%;">
+                <div class="text">Cloudflare<br /><span class="detail">Loading...</span></div>
+            </td>
+        </tr>
+        <tr style="height: 50%">
+            <td id="router-ping" style="background-color: darkgray; width: 16.67%;">
+                <div class="text">Router<br /><span class="detail">Loading...</span></div>
+            </td>
+            <td id="switch-ping" style="background-color: gray; width: 16.67%;">
+                <div class="text">Switch<br /><span class="detail">Loading...</span></div>
+            </td>
+            <td id="cloudkey-ping" style="background-color: darkgray; width: 16.67%;">
+                <div class="text">Controller<br /><span class="detail">Loading...</span></div>
+            </td>
+            <td id="downstairs-ap-ping" style="background-color: gray; width: 16.67%;">
+                <div class="text">Downstairs AP<br /><span class="detail">Loading...</span></div>
+            </td>
+            <td id="loft-ap-ping" style="background-color: darkgray; width: 16.67%;">
+                <div class="text">Loft AP<br /><span class="detail">Loading...</span></div>
+            </td>
+            <td id="phone-rooms-ap-ping" style="background-color: gray; width: 16.67%;">
+                <div class="text">Phone Rooms AP<br /><span class="detail">Loading...</span></div>
+            </td>
+        </tr>
+    </table>
+    <script>
+        function renderSpeedtestResult(el, result) {
+            if (result === null || result === undefined || result === 0) {
+                el.style.backgroundColor = "DarkKhaki"
+                el.getElementsByClassName("detail")[0].innerText = "Data Missing"
+                return
+            }
+            if (result < 10000) {
+                el.style.backgroundColor = "DarkRed"
+            } else if (result < 30000) {
+                el.style.backgroundColor = "DarkOrange"
+            } else {
+                el.style.backgroundColor = "green"
+            }
+            el.getElementsByClassName("detail")[0].innerText = result/1000 + " Mbps"
+        }
+
+        function renderExternalPingResult(el, result) {
+            if (result === null || result === undefined) {
+                el.style.backgroundColor = "DarkKhaki"
+                el.getElementsByClassName("detail")[0].innerText = "Data Missing"
+                return
+            }
+            if (result.avgRtt > 100 || result.maxRTT > 250 || result.stdDevRtt > 75 || result.packetLossPct > 5) {
+                el.style.backgroundColor = "DarkRed"
+            } else if (result.avgRtt > 60 || result.maxRTT > 100 || result.stdDevRtt > 20 || result.packetLossPct > 0) {
+                el.style.backgroundColor = "DarkOrange"
+            } else {
+                el.style.backgroundColor = "green"
+            }
+            el.getElementsByClassName("detail")[0].innerText = "Avg " + result.avgRtt + "ms; " + "Max " + result.maxRtt + "ms; " + "StdDev " + result.stdDevRtt + "ms; " + "Loss " + result.packetLossPct + "%"
+        }
+
+        function renderInternalPingResult(el, result) {
+            if (result === null || result === undefined) {
+                el.style.backgroundColor = "DarkKhaki"
+                el.getElementsByClassName("detail")[0].innerText = "Data Missing"
+                return
+            }
+            if (result.avgRtt > 50 || result.maxRTT > 75 || result.stdDevRtt > 20 || result.packetLossPct > 5) {
+                el.style.backgroundColor = "DarkRed"
+            } else if (result.avgRtt > 25 || result.maxRTT > 40 || result.stdDevRtt > 5 || result.packetLossPct > 0) {
+                el.style.backgroundColor = "DarkOrange"
+            } else {
+                el.style.backgroundColor = "green"
+            }
+            el.getElementsByClassName("detail")[0].innerText = "Avg " + result.avgRtt + "ms; " + "Max " + result.maxRtt + "ms; " + "StdDev " + result.stdDevRtt + "ms; " + "Loss " + result.packetLossPct + "%"
+        }
+
+        function update() {
+            fetch('/status')
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    console.log(data)
+                    document.getElementById("error-display").style.display = "none"
+                    renderSpeedtestResult(document.getElementById("speedtest"), data.fastcomKbps)
+                    renderExternalPingResult(document.getElementById("google-ping"), data.google)
+                    renderExternalPingResult(document.getElementById("cloudflare-ping"), data.cloudflare)
+                    renderInternalPingResult(document.getElementById("router-ping"), data.router)
+                    renderInternalPingResult(document.getElementById("switch-ping"), data.switch)
+                    renderInternalPingResult(document.getElementById("cloudkey-ping"), data.cloudKey)
+                    renderInternalPingResult(document.getElementById("downstairs-ap-ping"), data.downstairsAP)
+                    renderInternalPingResult(document.getElementById("loft-ap-ping"), data.loftAP)
+                    renderInternalPingResult(document.getElementById("phone-rooms-ap-ping"), data.phoneRoomsAP)
+                })
+                .catch(err => {
+                    console.error(err)
+                    document.getElementById("error-display").innerText = err
+                    document.getElementById("error-display").style.display = "block"
+                })
+        }
+        window.setInterval(update, 750);
+    </script>
+</body>
+</html>

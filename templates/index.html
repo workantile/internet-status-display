@@ -93,9 +93,9 @@
                 el.getElementsByClassName("detail")[0].innerText = "Data Missing"
                 return
             }
-            if (result.avgRtt > 100 || result.maxRTT > 250 || result.stdDevRtt > 75 || result.packetLossPct > 5) {
+            if (result.avgRtt > 300 || result.maxRTT > 500 || result.stdDevRtt > 100 || result.packetLossPct > 5) {
                 el.style.backgroundColor = "DarkRed"
-            } else if (result.avgRtt > 60 || result.maxRTT > 100 || result.stdDevRtt > 20 || result.packetLossPct > 0) {
+            } else if (result.avgRtt > 100 || result.maxRTT > 200 || result.stdDevRtt > 50 || result.packetLossPct > 0) {
                 el.style.backgroundColor = "DarkOrange"
             } else {
                 el.style.backgroundColor = "green"
@@ -109,9 +109,9 @@
                 el.getElementsByClassName("detail")[0].innerText = "Data Missing"
                 return
             }
-            if (result.avgRtt > 50 || result.maxRTT > 75 || result.stdDevRtt > 20 || result.packetLossPct > 5) {
+            if (result.avgRtt > 100 || result.maxRTT > 200 || result.stdDevRtt > 50 || result.packetLossPct > 5) {
                 el.style.backgroundColor = "DarkRed"
-            } else if (result.avgRtt > 25 || result.maxRTT > 40 || result.stdDevRtt > 5 || result.packetLossPct > 0) {
+            } else if (result.avgRtt > 50 || result.maxRTT > 100 || result.stdDevRtt > 30 || result.packetLossPct > 0) {
                 el.style.backgroundColor = "DarkOrange"
             } else {
                 el.style.backgroundColor = "green"

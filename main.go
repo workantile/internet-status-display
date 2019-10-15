@@ -44,11 +44,11 @@ const pingInterval = 10 * time.Second
 const googleAddr = "8.8.8.8"
 const cloudflareAddr = "1.1.1.1"
 const routerAddr = "10.10.10.1"
-const switchAddr = "10.10.10.255" // TODO(cdzombak):
+const switchAddr = "10.10.10.2"
 const cloudKeyAddr = "10.10.10.14"
-const downstairsAPAddr = "10.10.10.255" // TODO(cdzombak):
-const loftAPAddr = "10.10.10.255"       // TODO(cdzombak):
-const phoneRoomsAPAddr = "10.10.10.255" // TODO(cdzombak):
+const downstairsAPAddr = "10.10.10.5"
+const loftAPAddr = "10.10.10.7"
+const phoneRoomsAPAddr = "10.10.10.8"
 
 func statusHandler(w http.ResponseWriter, r *http.Request) {
 	CurrentStatus.mutex.RLock()

@@ -16,7 +16,7 @@ type PingResult struct {
 	PacketLossPct int   `json:"packetLossPct"`
 }
 
-const pingCount = 5
+const pingCount = 10
 const pingTimeout = 3 * time.Second
 
 func startPing(interval time.Duration, targetAddr string, cb func(stats *PingResult, err error)) {

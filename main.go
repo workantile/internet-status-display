@@ -16,7 +16,7 @@ import (
 type Status struct {
 	mutex sync.RWMutex `json:"-"`
 
-	FastcomSpeedKbps int        `json:"fastcomKbps"`
+	FastcomSpeedKbps int         `json:"fastcomKbps"`
 	GooglePing       *PingResult `json:"google"`
 	CloudflarePing   *PingResult `json:"cloudflare"`
 
@@ -28,6 +28,7 @@ type Status struct {
 	PhoneRoomsAPPing *PingResult `json:"phoneRoomsAP"`
 }
 
+// Update applies the given function to this Status instance, using the struct's mutex for write protection.
 func (s *Status) Update(updater func(s *Status)) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
@@ -36,6 +37,18 @@ func (s *Status) Update(updater func(s *Status)) {
 
 var CurrentStatus = Status{}
 var ProbeMutex sync.Mutex
+
+const serveAddr = ":8001"
+const speedtestInterval = 5 * time.Minute
+const pingInterval = 10 * time.Second
+const googleAddr = "8.8.8.8"
+const cloudflareAddr = "1.1.1.1"
+const routerAddr = "10.10.10.1"
+const switchAddr = "10.10.10.255" // TODO(cdzombak):
+const cloudKeyAddr = "10.10.10.14"
+const downstairsAPAddr = "10.10.10.255" // TODO(cdzombak):
+const loftAPAddr = "10.10.10.255"       // TODO(cdzombak):
+const phoneRoomsAPAddr = "10.10.10.255" // TODO(cdzombak):
 
 func statusHandler(w http.ResponseWriter, r *http.Request) {
 	CurrentStatus.mutex.RLock()
@@ -63,16 +76,6 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, errors.Wrap(err, "render template").Error(), http.StatusInternalServerError)
 	}
 }
-
-const pingInterval = 10 * time.Second
-const googleAddr = "8.8.8.8"
-const cloudflareAddr = "1.1.1.1"
-const routerAddr = "10.10.10.1"
-const switchAddr = "10.10.10.255"  // TODO(cdzombak):
-const cloudKeyAddr = "10.10.10.14"
-const downstairsAPAddr = "10.10.10.255"  // TODO(cdzombak):
-const loftAPAddr = "10.10.10.255"  // TODO(cdzombak):
-const phoneRoomsAPAddr = "10.10.10.255"  // TODO(cdzombak):
 
 func main() {
 	startPing(pingInterval, googleAddr, func(stats *PingResult, err error) {
@@ -195,7 +198,7 @@ func main() {
 		})
 	})
 
-	startFastcomSpeedTest(4*time.Minute, func(kbps float64, err error) {
+	startFastcomSpeedTest(speedtestInterval, func(kbps float64, err error) {
 		if err != nil {
 			log.Println("[warning] speedtest:", err)
 			CurrentStatus.Update(func(s *Status) {
@@ -211,5 +214,6 @@ func main() {
 
 	http.HandleFunc("/", rootHandler)
 	http.HandleFunc("/status", statusHandler)
-	log.Fatal(http.ListenAndServe(":8001", nil))
+	log.Printf("[info] starting server at %s...\n", serveAddr)
+	log.Fatal(http.ListenAndServe(serveAddr, nil))
 }

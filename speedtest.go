@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	"github.com/pkg/errors"
@@ -8,6 +9,7 @@ import (
 )
 
 func startFastcomSpeedTest(interval time.Duration, cb func(kbps float64, err error)) {
+	log.Printf("[info] scheduling fast.com speedtest, every %d seconds...\n", int(interval.Seconds()))
 	scheduleAfter(func() {
 		fastCom := fast.New()
 		err := fastCom.Init()

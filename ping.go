@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"math"
 	"time"
 
@@ -15,15 +16,19 @@ type PingResult struct {
 	PacketLossPct int   `json:"packetLossPct"`
 }
 
+const pingCount = 5
+const pingTimeout = 3 * time.Second
+
 func startPing(interval time.Duration, targetAddr string, cb func(stats *PingResult, err error)) {
+	log.Printf("[info] scheduling ping to %s, every %d seconds...\n", targetAddr, int(interval.Seconds()))
 	scheduleAfter(func() {
 		pinger, err := ping.NewPinger(targetAddr)
 		if err != nil {
 			cb(nil, errors.Wrap(err, "building new Pinger failed"))
 			return
 		}
-		pinger.Count = 5
-		pinger.Timeout = 2 * time.Second
+		pinger.Count = pingCount
+		pinger.Timeout = pingTimeout
 
 		ProbeMutex.Lock()
 		pinger.Run()

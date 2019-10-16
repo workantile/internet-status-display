@@ -44,6 +44,14 @@ popd
 
 ### server systemd unit
 
+in `/etc/sysctl.conf`:
+
+```
+net.ipv4.ping_group_range=0 2147483647
+```
+
+(then reboot)
+
 in `/etc/systemd/system/internet-status-display.service`:
 
 ```
@@ -93,7 +101,7 @@ unclutter -idle 0.5 -root &
 sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' /home/pi/.config/chromium/Default/Preferences
 sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' /home/pi/.config/chromium/Default/Preferences
 
-/usr/bin/chromium-browser --noerrdialogs --disable-infobars --kiosk http://localhost:8001/ &
+/usr/bin/chromium-browser --noerrdialogs --disable-infobars --kiosk http://localhost:8001/
 ```
 
 in `/etc/systemd/system/kiosk.service`:

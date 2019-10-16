@@ -71,50 +71,55 @@
         </tr>
     </table>
     <script>
+        const goodColor = "#2BAC76"
+        const moderateColor = "#E36E4B"
+        const badColor = "#CD2553"
+        const missingColor = "#83A1A7"
+
         function renderSpeedtestResult(el, result) {
             if (result === null || result === undefined || result === 0) {
-                el.style.backgroundColor = "DarkKhaki"
+                el.style.backgroundColor = missingColor
                 el.getElementsByClassName("detail")[0].innerText = "Data Missing"
                 return
             }
             if (result < 10000) {
-                el.style.backgroundColor = "DarkRed"
+                el.style.backgroundColor = badColor
             } else if (result < 30000) {
-                el.style.backgroundColor = "DarkOrange"
+                el.style.backgroundColor = moderateColor
             } else {
-                el.style.backgroundColor = "green"
+                el.style.backgroundColor = goodColor
             }
             el.getElementsByClassName("detail")[0].innerText = result/1000 + " Mbps"
         }
 
         function renderExternalPingResult(el, result) {
             if (result === null || result === undefined) {
-                el.style.backgroundColor = "DarkKhaki"
+                el.style.backgroundColor = missingColor
                 el.getElementsByClassName("detail")[0].innerText = "Data Missing"
                 return
             }
             if (result.avgRtt > 300 || result.maxRTT > 500 || result.stdDevRtt > 100 || result.packetLossPct > 5) {
-                el.style.backgroundColor = "DarkRed"
+                el.style.backgroundColor = badColor
             } else if (result.avgRtt > 100 || result.maxRTT > 200 || result.stdDevRtt > 50 || result.packetLossPct > 0) {
-                el.style.backgroundColor = "DarkOrange"
+                el.style.backgroundColor = moderateColor
             } else {
-                el.style.backgroundColor = "green"
+                el.style.backgroundColor = goodColor
             }
             el.getElementsByClassName("detail")[0].innerText = "Avg " + result.avgRtt + "ms; " + "Max " + result.maxRtt + "ms; " + "StdDev " + result.stdDevRtt + "ms; " + "Loss " + result.packetLossPct + "%"
         }
 
         function renderInternalPingResult(el, result) {
             if (result === null || result === undefined) {
-                el.style.backgroundColor = "DarkKhaki"
+                el.style.backgroundColor = missingColor
                 el.getElementsByClassName("detail")[0].innerText = "Data Missing"
                 return
             }
             if (result.avgRtt > 100 || result.maxRTT > 200 || result.stdDevRtt > 50 || result.packetLossPct > 5) {
-                el.style.backgroundColor = "DarkRed"
+                el.style.backgroundColor = badColor
             } else if (result.avgRtt > 50 || result.maxRTT > 100 || result.stdDevRtt > 30 || result.packetLossPct > 0) {
-                el.style.backgroundColor = "DarkOrange"
+                el.style.backgroundColor = moderateColor
             } else {
-                el.style.backgroundColor = "green"
+                el.style.backgroundColor = goodColor
             }
             el.getElementsByClassName("detail")[0].innerText = "Avg " + result.avgRtt + "ms; " + "Max " + result.maxRtt + "ms; " + "StdDev " + result.stdDevRtt + "ms; " + "Loss " + result.packetLossPct + "%"
         }

@@ -40,7 +40,7 @@ var ProbeMutex sync.Mutex
 
 const serveAddr = ":8001"
 const speedtestInterval = 5 * time.Minute
-const pingInterval = 10 * time.Second
+const pingInterval = 45 * time.Second
 const googleAddr = "8.8.8.8"
 const cloudflareAddr = "1.1.1.1"
 const routerAddr = "10.10.10.1"

@@ -16,16 +16,18 @@ import (
 type Status struct {
 	mutex sync.RWMutex `json:"-"`
 
-	FastcomSpeedKbps int         `json:"fastcomKbps"`
-	GooglePing       *PingResult `json:"google"`
-	CloudflarePing   *PingResult `json:"cloudflare"`
-
-	RouterPing       *PingResult `json:"router"`
-	SwitchPing       *PingResult `json:"switch"`
-	CloudKeyPing     *PingResult `json:"cloudKey"`
-	DownstairsAPPing *PingResult `json:"downstairsAP"`
-	LoftAPPing       *PingResult `json:"loftAP"`
-	PhoneRoomsAPPing *PingResult `json:"phoneRoomsAP"`
+	FastComSpeedKbps         int         `json:"fastcomKbps"`
+	SpeedtestNetUploadKbps   int         `json:"speedtestNetUploadKbps"`
+	SpeedtestNetDownloadKbps int         `json:"speedtestNetDownloadKbps"`
+	GooglePing               *PingResult `json:"google"`
+	CloudflarePing           *PingResult `json:"cloudflare"`
+	OpenDNSPing              *PingResult `json:"opendns"`
+	RouterPing               *PingResult `json:"router"`
+	SwitchPing               *PingResult `json:"switch"`
+	CloudKeyPing             *PingResult `json:"cloudKey"`
+	DownstairsAPPing         *PingResult `json:"downstairsAP"`
+	LoftAPPing               *PingResult `json:"loftAP"`
+	PhoneRoomsAPPing         *PingResult `json:"phoneRoomsAP"`
 }
 
 // Update applies the given function to this Status instance, using the struct's mutex for write protection.
@@ -43,6 +45,7 @@ const speedtestInterval = 5 * time.Minute
 const pingInterval = 45 * time.Second
 const googleAddr = "8.8.8.8"
 const cloudflareAddr = "1.1.1.1"
+const openDnsAddr = "208.67.220.220"
 const routerAddr = "10.10.10.1"
 const switchAddr = "10.10.10.2"
 const cloudKeyAddr = "10.10.10.14"
@@ -105,6 +108,21 @@ func main() {
 		log.Printf("[debug] cloudflare pkt loss: %d%%\n", stats.PacketLossPct)
 		CurrentStatus.Update(func(s *Status) {
 			s.CloudflarePing = stats
+		})
+	})
+
+	startPing(pingInterval, openDnsAddr, func(stats *PingResult, err error) {
+		if err != nil {
+			log.Println("[warning] opendns ping:", err)
+			CurrentStatus.Update(func(s *Status) {
+				s.OpenDNSPing = nil
+			})
+			return
+		}
+		log.Printf("[debug] opendns ping avg: %d ms\n", stats.AvgRtt)
+		log.Printf("[debug] opendns pkt loss: %d%%\n", stats.PacketLossPct)
+		CurrentStatus.Update(func(s *Status) {
+			s.OpenDNSPing = stats
 		})
 	})
 
@@ -198,17 +216,45 @@ func main() {
 		})
 	})
 
-	startFastcomSpeedTest(speedtestInterval, func(kbps float64, err error) {
+	startFastComSpeedTest(speedtestInterval, func(kbps float64, err error) {
 		if err != nil {
-			log.Println("[warning] speedtest:", err)
+			log.Println("[warning] fast.com speedtest:", err)
 			CurrentStatus.Update(func(s *Status) {
-				s.FastcomSpeedKbps = 0
+				s.FastComSpeedKbps = 0
 			})
 			return
 		}
-		log.Printf("[debug] speedtest result: %.2f Kbps\n", kbps)
+		log.Printf("[debug] fast.com speedtest result: %.2f Kbps\n", kbps)
 		CurrentStatus.Update(func(s *Status) {
-			s.FastcomSpeedKbps = int(math.Round(kbps))
+			s.FastComSpeedKbps = int(math.Round(kbps))
+		})
+	})
+
+	startSpeedtestNetUploadSpeedTest(speedtestInterval, func(kbps float64, err error) {
+		if err != nil {
+			log.Println("[warning] speedtest.net upload test:", err)
+			CurrentStatus.Update(func(s *Status) {
+				s.SpeedtestNetUploadKbps = 0
+			})
+			return
+		}
+		log.Printf("[debug] speedtest.net upload result: %.2f Kbps\n", kbps)
+		CurrentStatus.Update(func(s *Status) {
+			s.SpeedtestNetUploadKbps = int(math.Round(kbps))
+		})
+	})
+
+	startSpeedtestNetDownloadSpeedTest(speedtestInterval, func(kbps float64, err error) {
+		if err != nil {
+			log.Println("[warning] speedtest.net download test:", err)
+			CurrentStatus.Update(func(s *Status) {
+				s.SpeedtestNetDownloadKbps = 0
+			})
+			return
+		}
+		log.Printf("[debug] speedtest.net download result: %.2f Kbps\n", kbps)
+		CurrentStatus.Update(func(s *Status) {
+			s.SpeedtestNetDownloadKbps = int(math.Round(kbps))
 		})
 	})
 

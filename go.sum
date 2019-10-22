@@ -1,11 +1,15 @@
 github.com/antonholmquist/jason v1.0.0 h1:Ytg94Bcf1Bfi965K2q0s22mig/n4eGqEij/atENBhA0=
 github.com/antonholmquist/jason v1.0.0/go.mod h1:+GxMEKI0Va2U8h3os6oiUAetHAlGMvxjdpAH/9uvUMA=
+github.com/dchest/uniuri v0.0.0-20160212164326-8902c56451e9 h1:74lLNRzvsdIlkTgfDSMuaPjBr4cf6k7pwQQANm/yLKU=
+github.com/dchest/uniuri v0.0.0-20160212164326-8902c56451e9/go.mod h1:GgB8SF9nRG+GqaDtLcwJZsQFhcogVCJ79j4EdT0c2V4=
 github.com/ddo/go-spin v0.0.0-20160718105357-ab0a40e623c0 h1:IXCsXx3/itag1jdJ6Pdk96BRuYRHJvcVxn9zMVutt7I=
 github.com/ddo/go-spin v0.0.0-20160718105357-ab0a40e623c0/go.mod h1:F4meHnXw8Iq/mjLWPtyMXrxm0xtANYOhyCeqBvbjPs8=
 github.com/ddo/pick-json v0.0.0-20170207095303-c8760e09e0fe h1:/8DxbVJzB+Rx2wgJ1VGb3ziwGlI2VB3bWqtoldtalUU=
 github.com/ddo/pick-json v0.0.0-20170207095303-c8760e09e0fe/go.mod h1:vhvQl0uhd1j+zZPJhH0mZ1Moz14khMTXkCkNDXavk1Q=
 github.com/ddo/rq v0.0.0-20190828174524-b3daa55fcaba h1:EMLQSxP68m4ddJpmMT+LizYO0AjrROprPXjll2CARj0=
 github.com/ddo/rq v0.0.0-20190828174524-b3daa55fcaba/go.mod h1:XIayI7kdKklkc7yyWDBYMJLbK/AO4AchQUxdoSFcn+k=
+github.com/kylegrantlucas/speedtest v0.0.0-20180419014002-f8512f58e7ea h1:4Ek6G1ndb/DFCrqezAV7Hy52NgDmRj8sJeMr1PeErmA=
+github.com/kylegrantlucas/speedtest v0.0.0-20180419014002-f8512f58e7ea/go.mod h1:QiU+PZGcx6YZxDBL2y4woEXy3z+1JPSQmH1EbyT5mNc=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/sparrc/go-ping v0.0.0-20190613174326-4e5b6552494c h1:gqEdF4VwBu3lTKGHS9rXE9x1/pEaSwCXRLOZRF6qtlw=

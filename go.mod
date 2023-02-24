@@ -11,7 +11,7 @@ require (
 	github.com/kylegrantlucas/speedtest v0.0.0-20180419014002-f8512f58e7ea
 	github.com/pkg/errors v0.8.1
 	github.com/sparrc/go-ping v0.0.0-20190613174326-4e5b6552494c
-	golang.org/x/net v0.0.0-20191011234655-491137f69257 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	gopkg.in/ddo/go-dlog.v1 v1.0.2 // indirect
 	gopkg.in/ddo/go-dlog.v2 v2.1.0 // indirect
 	gopkg.in/ddo/go-fast.v0 v0.0.0-20190807090025-2ab4a3dd618c
